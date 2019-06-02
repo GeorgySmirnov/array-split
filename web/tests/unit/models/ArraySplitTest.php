@@ -3,6 +3,7 @@
 namespace tests\unit\models;
 
 use app\models\ArraySplit;
+use app\models\User;
 
 class ArraySplitTest extends \Codeception\Test\Unit
 {
@@ -91,5 +92,16 @@ class ArraySplitTest extends \Codeception\Test\Unit
         $this->assertFalse($split->validate(['array']));
         $split->array = [1,[2,3],4,5];
         $this->assertFalse($split->validate(['array']));
+    }
+
+    public function testCanCreateNewSplit()
+    {
+        $user = User::findOne(['access_token' => '00000000000000000000000000000000']);
+        $split = ArraySplit::createSplit($user, 1, [1,1,1,0,0,0]);
+
+        $this->assertInstanceOf(ArraySplit::class, $split);
+        $this->assertEquals($user->id, $split->user_id);
+        $this->assertEquals(3, $split->split_index);
+        $this->assertTrue($split->save());
     }
 }

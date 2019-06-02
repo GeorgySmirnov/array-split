@@ -3,6 +3,7 @@
 namespace app\models;
 
 use yii\db\ActiveRecord;
+use app\models\User;
 
 class ArraySplit extends ActiveRecord
 {
@@ -17,6 +18,18 @@ class ArraySplit extends ActiveRecord
             [['number_n', 'split_index'], 'integer'],
             ['array', 'each', 'rule' => ['integer']],
         ];
+    }
+
+    public static function createSplit(User $user, int $N, array $array): ArraySplit
+    {
+        $split = new ArraySplit();
+        
+        $split->user_id = $user->id;
+        $split->number_n = $N;
+        $split->array = $array;
+        $split->split_index = self::getSplitIndex($N, $array);
+
+        return $split;
     }
     
     /*
