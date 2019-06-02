@@ -3,6 +3,8 @@
 namespace app\models;
 
 use yii\db\ActiveRecord;
+use yii\base\InvalidArgumentException;
+
 use app\models\User;
 
 class ArraySplit extends ActiveRecord
@@ -27,6 +29,9 @@ class ArraySplit extends ActiveRecord
         $split->user_id = $user->id;
         $split->number_n = $N;
         $split->array = $array;
+        if (!$split->validate(['number_n', 'array'])) {
+            throw new InvalidArgumentException;
+        }
         $split->split_index = self::getSplitIndex($N, $array);
 
         return $split;
