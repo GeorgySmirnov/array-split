@@ -10,6 +10,14 @@ class ArraySplit extends ActiveRecord
     {
         return '{{%array_split}}';
     }
+
+    public function rules()
+    {
+        return [
+            [['number_n', 'split_index'], 'integer'],
+            ['array', 'each', 'rule' => ['integer']],
+        ];
+    }
     
     /*
      * Разделяет массив array на две части таким образом,

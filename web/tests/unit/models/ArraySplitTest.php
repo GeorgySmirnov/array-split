@@ -46,4 +46,50 @@ class ArraySplitTest extends \Codeception\Test\Unit
             -1,
             ArraySplit::getSplitIndex(1, []));
     }
+
+    public function testCanCreateRecords()
+    {
+        $split = new ArraySplit();
+
+        $split->user_id = 1;
+        $split->number_n = 1;
+        $split->array = [1,1,1,0,0,0];
+        $split->split_index = 3;
+
+        $split->save();
+
+        $new = ArraySplit::findOne(['user_id' => 1]);
+
+        $this->assertEquals([1,1,1,0,0,0], $new->array);
+        $this->assertEquals(1, $new->number_n);
+    }
+
+    public function testCanValidateFields()
+    {
+        $split = new ArraySplit();
+
+        $split->number_n = 1;
+        $this->assertTrue($split->validate(['number_n']));
+        $split->number_n = -1;
+        $this->assertTrue($split->validate(['number_n']));
+        $split->number_n = 1000000000;
+        $this->assertTrue($split->validate(['number_n']));
+
+        $split->number_n = 'fds';
+        $this->assertFalse($split->validate(['number_n']));
+
+        $split->array = [1,2,3,4];
+        $this->assertTrue($split->validate(['array']));
+        $split->array = [1];
+        $this->assertTrue($split->validate(['array']));
+        $split->array = [];
+        $this->assertTrue($split->validate(['array']));
+        
+        $split->array = '1234';
+        $this->assertFalse($split->validate(['array']));
+        $split->array = [1,'two',3,4];
+        $this->assertFalse($split->validate(['array']));
+        $split->array = [1,[2,3],4,5];
+        $this->assertFalse($split->validate(['array']));
+    }
 }
