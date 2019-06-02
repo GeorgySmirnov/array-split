@@ -1,0 +1,21 @@
+version: '3'
+services:
+  web:
+    build:
+      context: ./web
+    volumes:
+      - ~/.composer-docker/cache:/root/.composer/cache:delegated
+    ports:
+      - '80:80'
+    command: run.sh
+    depends_on:
+      - db
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "root-password"
+      MYSQL_DATABASE: "array_split"
+      MYSQL_USER: "webuser"
+      MYSQL_PASSWORD: "webpass"
