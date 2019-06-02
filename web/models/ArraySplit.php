@@ -6,6 +6,11 @@ use yii\db\ActiveRecord;
 
 class ArraySplit extends ActiveRecord
 {
+    public static function tableName()
+    {
+        return '{{%array_split}}';
+    }
+    
     /*
      * Разделяет массив array на две части таким образом,
      * чтобы количество чисел N в первой части
